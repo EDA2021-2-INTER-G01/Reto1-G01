@@ -121,6 +121,7 @@ def get_artistas_tecnica(catalog, nombre_artista):
     lista_tecnicas = []
     ObrasTecnica= []
 
+
     for llave in artistas:
         if llave['DisplayName'] == nombre_artista:
             id = llave['ConstituentID']
@@ -159,7 +160,9 @@ def getNacion(lista):
         name = llave["name"]
         medium = llave["medium"]
         dimensions = llave["dimensions"]
-        artista=llave["constituentid"]
+        art=llave["constituentid"]
+        artista=art.replace('[','').replace(']','').replace(' ','').split(",")
+
         na=lt.newList("ARRAY_LIST")
         agregar = {"name" : name,"artistas":artista, "dateacquired" : dateacquired, 
                        "medium" : medium, "dimensions" : dimensions}
@@ -168,30 +171,58 @@ def getNacion(lista):
             llave2=lt.getElement(artistas,i)
             id=llave2['ConstituentID']
             nacion=llave2["Nacion"]
-            if (id in artista) and (lt.isPresent(naciones,nacion)==0) and (lt.isPresent(na,nacion)==0) :
+            if (id in artista) and (lt.isPresent(naciones,nacion)==0)  :
                 lt.addLast(na,nacion)
             
                 lt.addLast(naciones,nacion)
                 retorno[nacion]=lt.newList("ARRAY_LIST")  
                 lt.addLast(retorno[nacion], agregar)
-            elif (id in artista) and (lt.isPresent(na,nacion)==0):  
+            elif (id in artista) :  
                 lt.addLast(na,nacion)    
                 lt.addLast(retorno[nacion], agregar)                       
-                              
+                                      
     total=lt.newList("ARRAY_LIST")           
     for i in range(lt.size(naciones)):
         pais=lt.getElement(naciones,i)
+        if (pais!="") and (pais!="Nationality unknown"):
+         num=lt.size(retorno[pais])
         
-        num=lt.size(retorno[pais])
-        
-        new={"pais":pais,"numero de obras":num}
-        lt.addLast(total,new)
+         new={"pais":pais,"numero de obras":num}
+         
+         lt.addLast(total,new)
+    nu1=lt.size(retorno["Nationality unknown"])
+    nu2=lt.size(retorno[""])                                               
+    new={"pais":"Nationality unknown","numero de obras":nu1+nu2}
+    
+    lt.addLast(total,new)
+    
     retorn=sa.sort(total,sortnacion)
     pos=lt.getElement(retorn,1)["pais"]
     re1=getPrimeros(retorno[pos])
     re2=getUltimos(retorno[pos]) 
  
-    return lt.subList(retorn,1,10),re1,re2             
+    return lt.subList(retorn,1,10),re1,re2,print(naciones)             
+
+"""def transObras(lista):
+    for i in range (lt.size(lista)):
+        largo=(lista["largo"]*100)
+        diametro=(lista["diametro"]*100)
+        ancho=(lista["ancho"]*100)
+        altura=(lista["altura"]*100)
+        pre=0
+        if largo and ancho and altura:
+            vol=largo*altura*ancho
+            pre=72*vol
+        elif largo and ancho:
+            area=largo*ancho
+            if pre>0 and (area*72<pre):
+                pre=area*72
+        r=diametro/2        
+        if diametro and altura:
+            vol=3.1416*"""
+
+
+
 
             
 
