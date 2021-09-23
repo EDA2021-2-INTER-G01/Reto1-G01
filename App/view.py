@@ -132,7 +132,7 @@ while True:
         print(respuesta)
         nombre_artista = input("Ingrese el nombre del artista: ")
         obras = c.artistas_tecnica(catalog,nombre_artista)
-        printObrasTecnica(obras,nombre_artista)
+        print(c)
     
     elif int(inputs[0]) == 5:
         print(c.getNacion(catalog))
