@@ -41,11 +41,15 @@ los mismos.
 # Construccion de modelos
 def newCatalog():
     catalog = {'artworks': None,
-               'artists': None}
+               'artists': None,
+               'obrasPorArtistas': None,
+               'artistasPorObras': None,
+               'nacionalidades':None}
 
     catalog['artworks'] = lt.newList("ARRAY_LIST")
     catalog['artists'] = lt.newList("ARRAY_LIST")
     return catalog
+
 
 # Funciones para creacion de datos
 
@@ -55,7 +59,6 @@ def nuevoArtwork(name,dateacquired,constituentid,date,medium,dimensions,departme
         dateacquired2=datetime.date(int(datel[0]),int(datel[1]),int(datel[2]))
     else:
         dateacquired2=datetime.date(1,1,1)
-    
     artwork={'name':'','dateacquired':'','constituentid':'','date':'','medium':'',
              'dimensions':'','department':'','creditline':'','classification':''}
     artwork['name']=name
@@ -69,6 +72,7 @@ def nuevoArtwork(name,dateacquired,constituentid,date,medium,dimensions,departme
     artwork['classification']=classification 
     return artwork
 
+
 def newArtist(ConstituentID,nom,aN,aF,nacion,genero):
     artista = {"ConstituentID": "","Nombre":"", "Año De Nacimiento": "",  
                "Año De Fallecimiento": "","Nacion":"","Genero":""}
@@ -78,10 +82,11 @@ def newArtist(ConstituentID,nom,aN,aF,nacion,genero):
     artista["Año De Fallecimiento"]=aF
     artista["Nacion"]=nacion
     artista["Genero"]=genero
-
     return artista
 
+
 # Funciones para agregar informacion al catalogo
+
 
 def addArtwork(catalog, artwork):
     nuevo=nuevoArtwork(artwork['Title'],artwork['DateAcquired'],
@@ -89,6 +94,7 @@ def addArtwork(catalog, artwork):
                        artwork['Medium'],artwork['Dimensions'],
                        artwork['Department'],artwork['CreditLine'],artwork['Classification'])
     lt.addLast(catalog['artworks'],nuevo)
+
 
 def addArtist(catalog, artista):
     art = newArtist(artista['ConstituentID'], artista['DisplayName'],artista['BeginDate'],
@@ -101,9 +107,12 @@ def addArtist(catalog, artista):
 def getUltimos(lista):
     posicionl=lt.size(lista)-2
     return lt.subList(lista, posicionl, 3)
+
+
 def getPrimeros(lista):
-    
     return lt.subList(lista, 1, 3)
+
+
 def getPurchase(lista):
     cont=0
     x=1
@@ -149,6 +158,38 @@ def get_artistas_tecnica(catalog, nombre_artista):
             ObrasTecnica.append(info)
 
     return totalObras, totalTecnicas, TecnicaMasUtilizada, ObrasTecnica
+
+def get_artistas_tecnica(catalog, nombre_artista,diccionario,retorno):
+    artistas=lt.iterator(catalog['artists'])
+    obras=lt.iterator(catalog['artworks'])
+    valor=0
+    for artista in artistas:
+        if artista["Nombre"]==nombre_artista:
+            id=artista["ConstituentID"]
+            break
+    for obra in obras:
+        constituent=obra["constituentid"].strip('[]')
+        constituent=constituent.split(",")
+        if id in constituent:
+            tecnica=obra["medium"]
+            if tecnica not in diccionario:
+                diccionario[tecnica]=1
+                retorno["Obras"+tecnica]=[dict(obra)]
+            else:
+                diccionario[tecnica]+=1
+                retorno["Obras"+tecnica]=retorno["Obras"+tecnica].append(dict(obra))
+    for keys,values in diccionario.items():
+        if values>valor:
+            valor=values
+            key=keys
+    respuesta={"obra":len(retorno.values()),"tecnicas":len(diccionario),"TecnicaMasUsada":key,"ObraPorTecnica":retorno["Obras"+key]}
+    print('\nEl artista '+nombre_artista+' tiene en total de obras: '+str(respuesta["obra"]))
+    print('Total de tecnicas: '+str(respuesta["tecnicas"]))
+    print('Tecnica mas utilizada: '+str(respuesta["TecnicaMasUsada"]))
+    print('Las obras de la tecnica más utilizada: ' +str(respuesta["ObraPorTecnica"]))
+    return None
+
+
 def getNacion(lista):
     obras=lista["artworks"]  
     artistas=lista["artists"]
@@ -171,7 +212,29 @@ def getNacion(lista):
             llave2=lt.getElement(artistas,i)
             id=llave2['ConstituentID']
             nacion=llave2["Nacion"]
+<<<<<<< HEAD
             if (id in artista) and (lt.isPresent(naciones,nacion)==0)  :
+=======
+<<<<<<< HEAD
+            if (id in artista):
+                    lt.addLast(na,nacion)
+            if (id in artista) and (lt.isPresent(naciones,nacion) ==0) :
+                    lt.addLast(naciones,nacion)     
+        for i in range(lt.size(naciones)):
+            agregar = {"name" : name,"artistas":artista, "dateacquired" : dateacquired, 
+                       "medium" : medium, "dimensions" : dimensions}
+            if  (lt.getElement(naciones,i) in retorno) and (lt.isPresent(na,lt.getElement(naciones,i))!=0) :
+                lt.addLast(retorno[lt.getElement(naciones,i)], agregar) 
+                
+
+            elif (lt.isPresent(na,lt.getElement(naciones,i))!=0):
+                retorno[lt.getElement(naciones,i)]=lt.newList("ARRAY_LIST")  
+                lt.addLast(retorno[lt.getElement(naciones,i)], agregar)         
+    print(retorno.keys())
+    print(naciones)                          
+=======
+            if (id in artista) and (lt.isPresent(naciones,nacion)==0) and (lt.isPresent(na,nacion)==0) :
+>>>>>>> 0915da3ca8df6ab31d9b70e1c590a2876a589aee
                 lt.addLast(na,nacion)
             
                 lt.addLast(naciones,nacion)
@@ -180,7 +243,12 @@ def getNacion(lista):
             elif (id in artista) :  
                 lt.addLast(na,nacion)    
                 lt.addLast(retorno[nacion], agregar)                       
+<<<<<<< HEAD
                                       
+=======
+                              
+>>>>>>> origin/master
+>>>>>>> 0915da3ca8df6ab31d9b70e1c590a2876a589aee
     total=lt.newList("ARRAY_LIST")           
     for i in range(lt.size(naciones)):
         pais=lt.getElement(naciones,i)
@@ -224,9 +292,6 @@ def getNacion(lista):
 
 
 
-            
-
-
 
 def obrasCronologicoacq(lista,inicio,final,metodo,sizesublista): 
     obras = lista["artworks"]
@@ -256,13 +321,13 @@ def obrasCronologicoacq(lista,inicio,final,metodo,sizesublista):
     TimeMseg=(tiempo_fin-tiempo_inicio)*1000
     return respuesta
 
+
 def sortArtistas(Artistasc):
     sub_list = lt.subList(Artistasc,1,lt.size(Artistasc))
     sub_list = sub_list.copy()
     start_time = time.process_time()
     sorted_list = sa.sort(sub_list, compareartists)
     stop_time = time.process_time()
-    
     tiempo = (stop_time - start_time)*1000
     final=lt.newList()
     final2=lt.newList()
@@ -293,5 +358,7 @@ def cmpArtworkByDateAcquired(artwork1,artwork2):
     artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired'
     """
     return artwork1['dateacquired']<artwork2['dateacquired']
+
+
 def sortnacion(pais1,pais2):
     return pais1["numero de obras"]>pais2["numero de obras"]

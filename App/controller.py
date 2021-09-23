@@ -69,6 +69,7 @@ def loadArtworks(catalog):
     for artwork in input_file:
         model.addArtwork(catalog, artwork)
 
+
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
@@ -79,22 +80,18 @@ def getUltimos(lista):
 def getPurchase(lista):
     return model.getPurchase(lista)       
 
-def artistas_tecnica(catalog, nombre_artista):
-
-    return model.get_artistas_tecnica(catalog, nombre_artista)
-
 """"def artistasFecha(lista, inicio, final):
     artistasfechas = model.artistaFecha(lista, inicio, final)
     return artistasfechas"""
 def sortArtistas(lista):
-    
     return model.sortArtistas(lista)
+
 def getNacion(lista):
     return model.getNacion(lista)  
       
 def cA(catalog,inicio,final):
-    
-    return model.cArtistas(catalog,inicio,final)    
+    return model.cArtistas(catalog,inicio,final)  
+
 def obrasFecha(lista, inicio, final,metodo,sizesublista):
     if inicio:
         datel=inicio.split('-')
@@ -113,4 +110,9 @@ def obrasFecha(lista, inicio, final,metodo,sizesublista):
             metodo=='ShellSort'or metodo=='InsertionSort'):
         #print('ERROR, METODO NO VALIDO')
         return(3)
-    return model.obrasCronologicoacq(lista,inicio2,final2,metodo,sizesublista)        
+    return model.obrasCronologicoacq(lista,inicio2,final2,metodo,sizesublista)     
+
+def obrasPorTecnica(catalog, nombre_artista):
+    diccionario={}
+    retorno={}
+    return model.get_artistas_tecnica(catalog, nombre_artista,diccionario,retorno)
