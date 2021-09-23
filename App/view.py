@@ -41,6 +41,7 @@ def printMenu():
     print("3- Listar cronológicamente las adquisiciones")
     print("4- Clasificar las obras de una artista por tecnica")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
+    print("6- Consultar costo de transportar todas las obras e un departamento")
     print("0- Salir")
 
 def initCatalog():
@@ -135,6 +136,9 @@ while True:
     
     elif int(inputs[0]) == 5:
         print(c.getNacion(catalog))
+    elif int(inputs[0])==6:
+        departamento=input("Ingrese el departamento del museo que desea consultar: ")  
+        print(c.transObras(departamento,catalog))  
     else:
         sys.exit(0)
 sys.exit(0)

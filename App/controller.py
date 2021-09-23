@@ -87,7 +87,10 @@ def sortArtistas(lista):
     return model.sortArtistas(lista)
 
 def getNacion(lista):
-    return model.getNacion(lista)  
+    return model.getNacion(lista)
+def transObras(departamento,lista):
+    return model.transObras(departamento,lista)
+
       
 def cA(catalog,inicio,final):
     return model.cArtistas(catalog,inicio,final)  

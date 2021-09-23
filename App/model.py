@@ -53,14 +53,15 @@ def newCatalog():
 
 # Funciones para creacion de datos
 
-def nuevoArtwork(name,dateacquired,constituentid,date,medium,dimensions,department,creditline,classification):
+def nuevoArtwork(name,dateacquired,constituentid,date,medium,dimensions,department,creditline,classification,largo,altura,ancho,circun,diametro,peso):
     if dateacquired:
         datel=dateacquired.split('-')
         dateacquired2=datetime.date(int(datel[0]),int(datel[1]),int(datel[2]))
     else:
         dateacquired2=datetime.date(1,1,1)
     artwork={'name':'','dateacquired':'','constituentid':'','date':'','medium':'',
-             'dimensions':'','department':'','creditline':'','classification':''}
+             'dimensions':'','department':'','creditline':'','classification':'','largo':'',
+             'altura':'','ancho':'','circunferencia':'','diametro':'','peso':''}
     artwork['name']=name
     artwork['dateacquired']=dateacquired2
     artwork['constituentid']=constituentid
@@ -69,7 +70,13 @@ def nuevoArtwork(name,dateacquired,constituentid,date,medium,dimensions,departme
     artwork['dimensions']=dimensions
     artwork['department']=department
     artwork['creditline']=creditline
-    artwork['classification']=classification 
+    artwork['classification']=classification
+    artwork['largo']=largo
+    artwork['altura']=altura
+    artwork['ancho']=ancho
+    artwork['circunferencia']=circun
+    artwork['diametro']=diametro
+    artwork['peso']=peso 
     return artwork
 
 
@@ -92,7 +99,11 @@ def addArtwork(catalog, artwork):
     nuevo=nuevoArtwork(artwork['Title'],artwork['DateAcquired'],
                        artwork['ConstituentID'],artwork['Date'],
                        artwork['Medium'],artwork['Dimensions'],
-                       artwork['Department'],artwork['CreditLine'],artwork['Classification'])
+                       artwork['Department'],artwork['CreditLine'],
+                       artwork['Classification'],artwork['Length (cm)'],
+                       artwork['Height (cm)'],artwork['Width (cm)'],
+                       artwork['Circumference (cm)'],artwork['Diameter (cm)'],
+                       artwork['Weight (kg)'])
     lt.addLast(catalog['artworks'],nuevo)
 
 
@@ -212,43 +223,15 @@ def getNacion(lista):
             llave2=lt.getElement(artistas,i)
             id=llave2['ConstituentID']
             nacion=llave2["Nacion"]
-<<<<<<< HEAD
-            if (id in artista) and (lt.isPresent(naciones,nacion)==0)  :
-=======
-<<<<<<< HEAD
-            if (id in artista):
-                    lt.addLast(na,nacion)
-            if (id in artista) and (lt.isPresent(naciones,nacion) ==0) :
-                    lt.addLast(naciones,nacion)     
-        for i in range(lt.size(naciones)):
-            agregar = {"name" : name,"artistas":artista, "dateacquired" : dateacquired, 
-                       "medium" : medium, "dimensions" : dimensions}
-            if  (lt.getElement(naciones,i) in retorno) and (lt.isPresent(na,lt.getElement(naciones,i))!=0) :
-                lt.addLast(retorno[lt.getElement(naciones,i)], agregar) 
-                
-
-            elif (lt.isPresent(na,lt.getElement(naciones,i))!=0):
-                retorno[lt.getElement(naciones,i)]=lt.newList("ARRAY_LIST")  
-                lt.addLast(retorno[lt.getElement(naciones,i)], agregar)         
-    print(retorno.keys())
-    print(naciones)                          
-=======
-            if (id in artista) and (lt.isPresent(naciones,nacion)==0) and (lt.isPresent(na,nacion)==0) :
->>>>>>> 0915da3ca8df6ab31d9b70e1c590a2876a589aee
-                lt.addLast(na,nacion)
-            
+            if (id in artista) and (lt.isPresent(naciones,nacion)==0)  :            
                 lt.addLast(naciones,nacion)
                 retorno[nacion]=lt.newList("ARRAY_LIST")  
                 lt.addLast(retorno[nacion], agregar)
             elif (id in artista) :  
                 lt.addLast(na,nacion)    
                 lt.addLast(retorno[nacion], agregar)                       
-<<<<<<< HEAD
                                       
-=======
                               
->>>>>>> origin/master
->>>>>>> 0915da3ca8df6ab31d9b70e1c590a2876a589aee
     total=lt.newList("ARRAY_LIST")           
     for i in range(lt.size(naciones)):
         pais=lt.getElement(naciones,i)
@@ -271,26 +254,111 @@ def getNacion(lista):
  
     return lt.subList(retorn,1,10),re1,re2,print(naciones)             
 
-"""def transObras(lista):
-    for i in range (lt.size(lista)):
-        largo=(lista["largo"]*100)
-        diametro=(lista["diametro"]*100)
-        ancho=(lista["ancho"]*100)
-        altura=(lista["altura"]*100)
+def transObras(dep,lis):
+    obras=pordepartamento(dep,lis)
+    precio=0
+    pesoo=0
+    for i in range (lt.size(obras)):
+        llave=lt.getElement(obras,i)
+        if llave["largo"]!="":
+            largo=(float(llave["largo"])*100)
+        else:
+            largo=0
+        if llave["diametro"]!="":
+            diametro=(float(llave["diametro"])*100)
+        else:
+            diametro=0
+        if llave["ancho"]!="":
+            ancho=(float(llave["ancho"])*100)
+        else:
+            ancho=0
+        if llave["altura"]!="":
+            altura=(float(llave["altura"])*100)
+        else:
+            altura=0    
+        if llave["circunferencia"]!="":
+            circunferencia=(float(llave["circunferencia"])*100)
+        else:
+            circunferencia=0
+        if llave["peso"]!="":
+            peso=(float(llave["peso"])*100)
+        else:
+            peso=0
+        
         pre=0
-        if largo and ancho and altura:
+        if peso:
+            pre=72*peso
+            pesoo+=peso
+        if largo>0 and ancho>0 and altura>0:
             vol=largo*altura*ancho
-            pre=72*vol
-        elif largo and ancho:
+            if pre==0 or (vol*72>pre):
+             pre=72*vol
+        if largo>0 and ancho>0:
             area=largo*ancho
-            if pre>0 and (area*72<pre):
+            if pre==0 or (area*72>pre):
                 pre=area*72
-        r=diametro/2        
-        if diametro and altura:
-            vol=3.1416*"""
+        if diametro!="":
+            r=(int(diametro)/2)
+        else:
+            r=0            
+        if diametro>0 and altura>0:
+            vol=3.1416*(r**2)*altura
+            if pre==0 or (vol*72>pre):
+                pre=area*72
+        if diametro>0:
+            vol=((4*3.1416)/3)*(r**3)
+            if pre==0 or (vol*72>pre):
+                pre=area*72
+        if circunferencia>0:
+            area=(circunferencia/2)*(circunferencia/6.2831)
+            if pre==0 or (area*72>pre):
+                pre=area*72
+                        
+        if pre==0:
+            pre=48
+        lt.getElement(obras,i)["costo"]=pre            
+        precio+=pre
+        pesoo+=peso
+    return precio, lt.size(obras), pesoo,sortantiguedad(obras),sortcosto(obras)
+def pordepartamento(dep,lista):
+    obras=lista["artworks"]
+    retorno=lt.newList("ARRAY_LIST")
+    for i in range(lt.size(obras)):
+        llave = lt.getElement(obras, i)
+        dateacquired = llave["dateacquired"]
+        name = llave["name"]
+        depa=llave["department"]
+        medium = llave["medium"]
+        if llave["date"]!="":
+            antiguedad=(2021-int(llave["date"]))
+        else:
+            antiguedad=0    
+        clasificacion=llave["classification"]
+        dimensions = llave["dimensions"]
+        art=llave["constituentid"]
+        largo=(llave["largo"])
+        diametro=(llave["diametro"])
+        ancho=(llave["ancho"])
+        altura=(llave["altura"])
+        circunferencia=(llave["circunferencia"])
+        peso=(llave["peso"])
 
+        artista=art.replace('[','').replace(']','').replace(' ','').split(",")
 
-
+        agregar = {"name" : name,"artistas":artista, "dateacquired" : dateacquired, 
+                    "medium" : medium, "dimensions" : dimensions, 
+                    "clasificacion":clasificacion,"antiguedad":antiguedad,"largo":largo, "diametro" : diametro, 
+                    "ancho" : ancho, "altura" : altura, 
+                    "circunferencia":circunferencia,"peso":peso}
+        if depa.lower() == dep.lower():
+            lt.addLast(retorno,agregar)
+    return retorno
+def sortantiguedad(lista):    
+    retorno=sa.sort(lista,comparea)
+    return lt.subList(retorno,1,5)
+def sortcosto(lista):
+    retorno=sa.sort(lista,comparep)
+    return lt.subList(retorno,1,5)    
 
 
 def obrasCronologicoacq(lista,inicio,final,metodo,sizesublista): 
@@ -362,3 +430,8 @@ def cmpArtworkByDateAcquired(artwork1,artwork2):
 
 def sortnacion(pais1,pais2):
     return pais1["numero de obras"]>pais2["numero de obras"]
+
+def comparea(obra1,obra2):
+    return obra1["antiguedad"]>obra2["antiguedad"]
+def comparep(obra1,obra2):
+    return obra1["costo"]>obra2["costo"]    
