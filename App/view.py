@@ -51,9 +51,7 @@ def loadData(catalog):
 
 def printObrasCr(lista):
     cantidad = lt.size(lista)
-    print("Hay " + str(cantidad) + " obras adquiridas en el rango seleccioando , de las cuales, "
-           +str(c.getPurchase(lista))+" se adquirieron por compra." )
-    print()
+    print(str(cantidad) + " obras fueron adquiridas en el rango seleccionado, y " +str(c.getPurchase(lista))+" se compraron." )
     print("Top 3 mas jovenes: ")
     x=1
     while x<=3:
@@ -85,15 +83,12 @@ def printArtistasFecha(lista,lista1,lista2):
         print(y)
         x+=1
 
+def PrintArtistaTecnica(catalogo):
+    name=input("Ingrese el nombre del artista: ")
+    lista=c.obrasPorTecnica(catalog, name)
+    return lista
 
 
-def printObrasTecnica (info, name):
-    print(f"{name} tiene en total {info['TotObras']} obras en el museo.")
-    print(f"Uso {info['TotMedios']} tecnicas diferentes.\n")
-    print(f"La tecnica mas utilizadoa fue {info['MedMasUsado']} con {lt.size(info['ObrasMedMasUsado'])} piezas.")
-    print(f"Las piesas son:")
-    for artwork in lt.iterator(info["ObrasMedMasUsado"]): 
-        print(artwork) 
 """
 Menu principal
 """
@@ -115,11 +110,11 @@ while True:
     elif int(inputs[0]) == 2:
         Añoi= int(input("¿Desde que año quiere buscar?:  "))
         Añof = int(input("¿Hasta que año quiere buscar?:  "))
-        lista=c.cA(catalog,Añoi,Añof)
-        result = c.sortArtistas(lista)
+        respuesta=c.cA(catalog,Añoi,Añof)
+        resultados= c.sortArtistas(respuesta)
         print("El tiempo en mseg para la muestra de",lt.size(catalog["artists"]), " fue de: ",
-                                          str(result[0]))
-        printArtistasFecha(lista,result[1],result[2])
+                                          str(resultados[0]))
+        printArtistasFecha(respuesta,resultados[1],resultados[2])
         
 
         
@@ -127,18 +122,22 @@ while True:
         FechaInicial = input("¿Desde que fecha quiere buscar? (formato AAAA-MM-DD):   ")
         FechaFin = input("¿Hasta que fecha quiere buscar?(formato AAAA-MM-DD):   ")
         MetodoSort=input('¿Qué algoritmo de ordenamiento quiere implementar, InsertionSort, ShellSort, MergeSort o QuickSort?')
-        SizeSubLista=input('Ingrese el porecentaje de la muestra (entre 0 y 1):  ')
+        SizeSubLista=float(input('Ingrese el porecentaje de la muestra (entre 0 y 1):  '))
         CantidadObras=c.obrasFecha(catalog,FechaInicial,FechaFin,MetodoSort,float(SizeSubLista))
         printObrasCr(CantidadObras)
 
     elif int(inputs[0]) == 4:
-        print(c.getNacion(catalog))
+<<<<<<< HEAD
+        respuesta=PrintArtistaTecnica(catalog)
+        print(respuesta)
+=======
         nombre_artista = input("Ingrese el nombre del artista: ")
         obras = c.artistas_tecnica(catalog,nombre_artista)
         printObrasTecnica(obras,nombre_artista)
+>>>>>>> origin/master
     
     elif int(inputs[0]) == 5:
-        pass
+        print(c.getNacion(catalog))
     else:
         sys.exit(0)
 sys.exit(0)
